@@ -41,22 +41,17 @@ jobs:
 
       - name: Perform Swipe and Navigation Actions
         run: |
-          # الانتظار قليلا قبل بدء التمرير
           sleep 10
 
-          # التمرير من الأعلى إلى الأسفل
           $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
           sleep 2
 
-          # التمرير من الأسفل إلى الأعلى
           $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
           sleep 2
 
-          # الضغط على زر الرجوع
           $ANDROID_HOME/platform-tools/adb shell input keyevent 4
           sleep 2
 
-          # التمرير الأفقي
           $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
           sleep 2
 
