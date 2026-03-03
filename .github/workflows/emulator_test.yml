@@ -26,22 +26,21 @@ jobs:
           avdmanager create avd -n test_device -k "system-images;android-33;google_apis;x86_64" -d pixel_5 --force
           emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 &
           adb wait-for-device
-          adb shell input keyevent 82  # فتح الشاشة
+          adb shell input keyevent 82  
 
       # 3. تسجيل فيديو للشاشة لمدة 60 ثانية
       - name: Record Screen
         run: |
-          adb shell screenrecord /sdcard/emulator_record.mp4 --time-limit 60 &
-          sleep 60  # انتظار 60 ثانية لتسجيل الفيديو
-          adb pull /sdcard/emulator_record.mp4 .
+          adb shell screenrecord /sdcard/emulator_record.mp4 &
+          RECORD_PID=$!
+          echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
 
       # 4. فتح المتصفح الافتراضي
       - name: Open Browser and Take Screenshot
         run: |
           adb shell am start -n com.android.browser/.BrowserActivity
-          sleep 5  # انتظار فتح المتصفح
+          sleep 5 
           adb shell screencap -p /sdcard/screenshot.png
-          adb pull /sdcard/screenshot.png .
 
       # 5. التقاط قائمة التطبيقات وحفظها
       - name: Save Installed Apps List
@@ -51,14 +50,19 @@ jobs:
       # 6. تنفيذ أوامر تمرير (مثل التمرير بين الصفحات)
       - name: Perform Swipe and Navigation Actions
         run: |
-          # تمرير لليسار
           adb shell input swipe 500 1000 100 1000 200
           sleep 2
           adb shell input swipe 100 1000 500 1000 200
           sleep 2
-          adb shell input keyevent 3  # زر "Home"
+          adb shell input keyevent 3  
           sleep 2
           adb shell input swipe 500 0 500 1000 500
+
+      - name: Stop Screen Recording
+        run: |
+          adb shell pkill -f screenrecord
+          adb pull /sdcard/emulator_record.mp4 .
+          adb pull /sdcard/screenshot.png .
 
       # 7. إغلاق المحاكي
       - name: Stop Emulator
