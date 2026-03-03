@@ -16,8 +16,9 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Install Xvfb and PulseAudio
+      - name: Install Xvfb and dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install -y xvfb libpulse0
 
       - name: Install Android System Image and Tools
@@ -31,7 +32,7 @@ jobs:
           Xvfb :99 -screen 0 800x600x16 &
           export DISPLAY=:99
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -writable-system &
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-snapshot -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -writable-system &
           $ANDROID_HOME/platform-tools/adb wait-for-device
           sleep 300
 
