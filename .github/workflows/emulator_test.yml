@@ -31,7 +31,7 @@ jobs:
           $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect &
           $ANDROID_HOME/platform-tools/adb wait-for-device
           sleep 30
-          $ANDROID_HOME/platform-tools/adb shell input keyevent 82
+          $ANDROID_HOME/platform-tools/adb shell input keyevent 26
 
       # 4. تسجيل فيديو للشاشة لمدة 60 ثانية
       - name: Record Screen
