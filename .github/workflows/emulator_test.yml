@@ -20,15 +20,15 @@ jobs:
       # 2. تثبيت نظام Android وتحديث PATH
       - name: Install Android System Image and Tools
         run: |
-          echo "y" | sdkmanager "system-images;android-30;google_apis;x86_64" > /dev/null
+          echo "y" | sdkmanager "system-images;android-30;google_apis;x86" > /dev/null
           echo "y" | sdkmanager "emulator" > /dev/null
           echo "y" | sdkmanager "platform-tools" > /dev/null
 
       # 3. إنشاء AVD وتشغيل المحاكي
       - name: Create AVD and Start Emulator
         run: |
-          echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86_64" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage &
+          echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect &
           $ANDROID_HOME/platform-tools/adb wait-for-device
           sleep 30
           $ANDROID_HOME/platform-tools/adb shell input keyevent 82
