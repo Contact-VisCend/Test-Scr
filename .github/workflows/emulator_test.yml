@@ -18,7 +18,7 @@ jobs:
 
       - name: Install Android System Image and Tools
         run: |
-          echo "y" | sdkmanager "system-images;android-30;google_apis_playstore;x86" > /dev/null
+          echo "y" | sdkmanager "system-images;android-30;google_apis;x86" > /dev/null
           echo "y" | sdkmanager "emulator" > /dev/null
           echo "y" | sdkmanager "platform-tools" > /dev/null
 
