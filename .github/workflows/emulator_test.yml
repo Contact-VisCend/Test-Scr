@@ -16,6 +16,9 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
+      - name: Install Xvfb
+        run: sudo apt-get install -y xvfb
+
       - name: Install Android System Image and Tools
         run: |
           echo "y" | sdkmanager --verbose "system-images;android-30;google_apis;x86" > /dev/null
@@ -24,14 +27,20 @@ jobs:
 
       - name: Create AVD and Start Emulator
         run: |
+          Xvfb :99 -screen 0 1024x768 16 &
+          export DISPLAY=:99
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -no-snapshot-load -no-snapshot-save &
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -writable-system &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 180  # زيادة وقت الانتظار
+          sleep 300
 
       - name: Check Boot Status
         run: |
-          timeout 300 bash -c 'until [[ "$($ANDROID_HOME/platform-tools/adb shell getprop sys.boot_completed 2>/dev/null)" == "1" ]]; do sleep 5; done'
+          timeout 300 bash -c '
+          until $ANDROID_HOME/platform-tools/adb shell dumpsys window | grep "mCurrentFocus"; do
+            sleep 10
+          done
+          '
 
       - name: Start Screen Recording
         run: |
@@ -42,16 +51,12 @@ jobs:
       - name: Perform Swipe and Navigation Actions
         run: |
           sleep 10
-
           $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
           sleep 2
-
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
           sleep 2
-
           $ANDROID_HOME/platform-tools/adb shell input keyevent 4
           sleep 2
-
           $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
           sleep 2
 
@@ -66,7 +71,8 @@ jobs:
           $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png . || echo "Failed to pull screenshot.png"
 
       - name: Stop Emulator
-        run: $ANDROID_HOME/platform-tools/adb emu kill
+        run: |
+          $ANDROID_HOME/platform-tools/adb emu kill
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
