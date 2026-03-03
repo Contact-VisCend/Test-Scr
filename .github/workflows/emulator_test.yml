@@ -50,17 +50,17 @@ jobs:
           RECORD_PID=$!
           echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
 
-      - name: Perform Swipe and Navigation Actions
-        run: |
-          sleep 10
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input keyevent 4
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
-          sleep 2
+      # - name: Perform Swipe and Navigation Actions
+      #   run: |
+      #     sleep 10
+      #     $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
+      #     sleep 2
+      #     $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
+      #     sleep 2
+      #     $ANDROID_HOME/platform-tools/adb shell input keyevent 4
+      #     sleep 2
+      #     $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
+      #     sleep 2
 
       - name: Take Screenshot
         run: |
