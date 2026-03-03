@@ -29,17 +29,24 @@ jobs:
 
       - name: Create AVD and Start Emulator
         run: |
-          Xvfb :99 -screen 0 800x600x16 &
+          Xvfb :99 -screen 0 640x480x16 &
           export DISPLAY=:99
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-snapshot -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -writable-system &
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-snapshot -writable-system -partition-size 2048 -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 300
+          sleep 500
+
+      - name: Enable Root and Remount
+        run: |
+          $ANDROID_HOME/platform-tools/adb root
+          sleep 10
+          $ANDROID_HOME/platform-tools/adb remount
+          sleep 10
 
       - name: Check Boot Status
         run: |
-          timeout 300 bash -c '
-          until $ANDROID_HOME/platform-tools/adb shell dumpsys window | grep "mCurrentFocus"; do
+          timeout 600 bash -c '
+          until [[ "$($ANDROID_HOME/platform-tools/adb shell getprop init.svc.bootanim)" == "stopped" ]]; do
             sleep 10
           done
           '
@@ -50,17 +57,17 @@ jobs:
           RECORD_PID=$!
           echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
 
-      # - name: Perform Swipe and Navigation Actions
-      #   run: |
-      #     sleep 10
-      #     $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
-      #     sleep 2
-      #     $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
-      #     sleep 2
-      #     $ANDROID_HOME/platform-tools/adb shell input keyevent 4
-      #     sleep 2
-      #     $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
-      #     sleep 2
+      - name: Perform Swipe and Navigation Actions
+        run: |
+          sleep 10
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
+          sleep 2
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
+          sleep 2
+          $ANDROID_HOME/platform-tools/adb shell input keyevent 4
+          sleep 2
+          $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
+          sleep 2
 
       - name: Take Screenshot
         run: |
