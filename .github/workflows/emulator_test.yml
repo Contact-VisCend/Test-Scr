@@ -30,7 +30,7 @@ jobs:
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
           $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 90
+          sleep 25
 
       # 4. تسجيل فيديو للشاشة لمدة 60 ثانية
       - name: Record Screen
