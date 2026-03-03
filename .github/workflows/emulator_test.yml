@@ -4,7 +4,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      # 1. إعداد بيئة Java وAndroid SDK
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -17,41 +16,45 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      # 2. تثبيت نظام Android وتحديث PATH
       - name: Install Android System Image and Tools
         run: |
           echo "y" | sdkmanager "system-images;android-30;google_apis;x86" > /dev/null
           echo "y" | sdkmanager "emulator" > /dev/null
           echo "y" | sdkmanager "platform-tools" > /dev/null
 
-      # 3. إنشاء AVD وتشغيل المحاكي
       - name: Create AVD and Start Emulator
         run: |
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim &
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -no-snapshot-load &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 25
+          sleep 120
 
-      # 4. تسجيل فيديو للشاشة لمدة 60 ثانية
+      - name: Check Boot Status
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell "while [[ \"\$(getprop sys.boot_completed)\" != \"1\" ]]; do sleep 5; done"
+
+      - name: List Available Browsers
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell pm list packages | grep browser
+
+      - name: Open Browser and Take Screenshot
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell am start -a android.intent.action.VIEW -d http://google.com || \
+          $ANDROID_HOME/platform-tools/adb shell monkey -p com.android.chrome -v 500 || \
+          $ANDROID_HOME/platform-tools/adb shell monkey -p com.android.browser -v 500
+          sleep 10
+          $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
+
       - name: Record Screen
         run: |
           $ANDROID_HOME/platform-tools/adb shell screenrecord /sdcard/emulator_record.mp4 --time-limit 60 &
           RECORD_PID=$!
           echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
 
-      # 5. فتح المتصفح الافتراضي والتقاط صورة
-      - name: Open Browser and Take Screenshot
-        run: |
-          $ANDROID_HOME/platform-tools/adb shell am start -a android.intent.action.VIEW -d https://www.google.com
-          sleep 10
-          $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
-
-      # 6. التقاط قائمة التطبيقات وحفظها
       - name: Save Installed Apps List
         run: |
           $ANDROID_HOME/platform-tools/adb shell pm list packages > packages_list.txt
 
-      # 7. تنفيذ أوامر التمرير والتنقل
       - name: Perform Swipe and Navigation Actions
         run: |
           $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 100 1000 200
@@ -62,18 +65,15 @@ jobs:
           sleep 2
           $ANDROID_HOME/platform-tools/adb shell input swipe 500 0 500 1000 500
 
-      # 8. إيقاف تسجيل الشاشة
       - name: Stop Screen Recording
         run: |
           $ANDROID_HOME/platform-tools/adb shell kill $RECORD_PID || true
           $ANDROID_HOME/platform-tools/adb pull /sdcard/emulator_record.mp4 .
           $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png .
 
-      # 9. إغلاق المحاكي
       - name: Stop Emulator
         run: $ANDROID_HOME/platform-tools/adb emu kill
 
-      # 10. حفظ المخرجات في Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
