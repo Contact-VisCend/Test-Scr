@@ -2,7 +2,7 @@ name: Android Emulator Test with Video and Screenshot
 on: [push]
 jobs:
   test:
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,8 +16,9 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Install Xvfb
-        run: sudo apt-get install -y xvfb
+      - name: Install Xvfb and PulseAudio
+        run: |
+          sudo apt-get install -y xvfb libpulse0
 
       - name: Install Android System Image and Tools
         run: |
@@ -27,7 +28,7 @@ jobs:
 
       - name: Create AVD and Start Emulator
         run: |
-          Xvfb :99 -screen 0 1024x768 16 &
+          Xvfb :99 -screen 0 800x600x16 &
           export DISPLAY=:99
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
           $ANDROID_HOME/emulator/emulator -avd test_device -no-snapshot -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -writable-system &
