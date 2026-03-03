@@ -1,4 +1,4 @@
-name: Android Emulator Test with Video and Screenshot
+name: Android Emulator Test with Screenshot
 on: [push]
 jobs:
   test:
@@ -29,19 +29,12 @@ jobs:
 
       - name: Create AVD and Start Emulator
         run: |
-          Xvfb :99 -screen 0 640x480x16 &
+          Xvfb :99 -screen 0 800x600x16 &
           export DISPLAY=:99
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
           $ANDROID_HOME/emulator/emulator -avd test_device -no-window -no-snapshot -writable-system -partition-size 2048 -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 500
-
-      - name: Enable Root and Remount
-        run: |
-          $ANDROID_HOME/platform-tools/adb root
-          sleep 10
-          $ANDROID_HOME/platform-tools/adb remount
-          sleep 10
+          sleep 600  # زيادة وقت الانتظار إلى 10 دقائق
 
       - name: Check Boot Status
         run: |
@@ -51,33 +44,22 @@ jobs:
           done
           '
 
-      - name: Start Screen Recording
+      - name: Enable Root and Remount
         run: |
-          $ANDROID_HOME/platform-tools/adb shell screenrecord /sdcard/emulator_record.mp4 &
-          RECORD_PID=$!
-          echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
-
-      - name: Perform Swipe and Navigation Actions
-        run: |
+          $ANDROID_HOME/platform-tools/adb root
           sleep 10
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 100 500 1000 500
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input keyevent 4
-          sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
-          sleep 2
+          $ANDROID_HOME/platform-tools/adb remount
+          sleep 10
+
+      - name: Create Screenshot Directory
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell mkdir -p /sdcard/Download
+          $ANDROID_HOME/platform-tools/adb shell mkdir -p /data/local/tmp
 
       - name: Take Screenshot
         run: |
-          $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
-
-      - name: Stop Screen Recording
-        run: |
-          $ANDROID_HOME/platform-tools/adb shell kill $RECORD_PID || true
-          $ANDROID_HOME/platform-tools/adb pull /sdcard/emulator_record.mp4 . || echo "Failed to pull emulator_record.mp4"
-          $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png . || echo "Failed to pull screenshot.png"
+          $ANDROID_HOME/platform-tools/adb shell screencap -p /data/local/tmp/screenshot.png
+          $ANDROID_HOME/platform-tools/adb pull /data/local/tmp/screenshot.png .
 
       - name: Stop Emulator
         run: |
@@ -86,7 +68,5 @@ jobs:
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Emulator-Outputs
-          path: |
-            emulator_record.mp4
-            screenshot.png
+          name: Emulator-Screenshot
+          path: screenshot.png
