@@ -7,66 +7,74 @@ jobs:
       # 1. إعداد بيئة Java وAndroid SDK
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
+
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      # 2. إنشاء AVD وتشغيل المحاكي
+      # 2. تثبيت نظام Android وتحديث PATH
+      - name: Install Android System Image and Tools
+        run: |
+          echo "y" | sdkmanager "system-images;android-30;google_apis;x86_64" > /dev/null
+          echo "y" | sdkmanager "emulator" > /dev/null
+          echo "y" | sdkmanager "platform-tools" > /dev/null
+
+      # 3. إنشاء AVD وتشغيل المحاكي
       - name: Create AVD and Start Emulator
         run: |
-          sdkmanager "system-images;android-30;google_apis;x86_64"
-          avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86_64" -d pixel_5 --force
-          emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 &
-          adb wait-for-device
-          sleep 30  # تأخير للتأكد من أن المحاكي جاهز
-          adb shell input keyevent 82
+          echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86_64" -d pixel_5 --force
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage &
+          $ANDROID_HOME/platform-tools/adb wait-for-device
+          sleep 30
+          $ANDROID_HOME/platform-tools/adb shell input keyevent 82
 
-      # 3. تسجيل فيديو للشاشة لمدة 60 ثانية
+      # 4. تسجيل فيديو للشاشة لمدة 60 ثانية
       - name: Record Screen
         run: |
-          adb shell screenrecord /sdcard/emulator_record.mp4 --time-limit 60 &
+          $ANDROID_HOME/platform-tools/adb shell screenrecord /sdcard/emulator_record.mp4 --time-limit 60 &
           RECORD_PID=$!
           echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
 
-      # 4. فتح المتصفح الافتراضي
+      # 5. فتح المتصفح الافتراضي
       - name: Open Browser and Take Screenshot
         run: |
-          adb shell am start -a android.intent.action.VIEW -d https://www.google.com
+          $ANDROID_HOME/platform-tools/adb shell am start -a android.intent.action.VIEW -d https://www.google.com
           sleep 10
-          adb shell screencap -p /sdcard/screenshot.png
+          $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
 
-      # 5. التقاط قائمة التطبيقات وحفظها
+      # 6. التقاط قائمة التطبيقات وحفظها
       - name: Save Installed Apps List
         run: |
-          adb shell pm list packages > packages_list.txt
+          $ANDROID_HOME/platform-tools/adb shell pm list packages > packages_list.txt
 
-      # 6. تنفيذ أوامر تمرير (مثل التمرير بين الصفحات)
+      # 7. تنفيذ أوامر تمرير (مثل التمرير بين الصفحات)
       - name: Perform Swipe and Navigation Actions
         run: |
-          adb shell input swipe 500 1000 100 1000 200
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 100 1000 200
           sleep 2
-          adb shell input swipe 100 1000 500 1000 200
+          $ANDROID_HOME/platform-tools/adb shell input swipe 100 1000 500 1000 200
           sleep 2
-          adb shell input keyevent 3
+          $ANDROID_HOME/platform-tools/adb shell input keyevent 3
           sleep 2
-          adb shell input swipe 500 0 500 1000 500
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 0 500 1000 500
 
-      # 7. إيقاف تسجيل الشاشة
+      # 8. إيقاف تسجيل الشاشة
       - name: Stop Screen Recording
         run: |
-          adb shell kill $RECORD_PID || true
-          adb pull /sdcard/emulator_record.mp4 .
-          adb pull /sdcard/screenshot.png .
+          $ANDROID_HOME/platform-tools/adb shell kill $RECORD_PID || true
+          $ANDROID_HOME/platform-tools/adb pull /sdcard/emulator_record.mp4 .
+          $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png .
 
-      # 8. إغلاق المحاكي
+      # 9. إغلاق المحاكي
       - name: Stop Emulator
-        run: adb emu kill
+        run: $ANDROID_HOME/platform-tools/adb emu kill
 
-      # 9. حفظ المخرجات في Artifacts
+      # 10. حفظ المخرجات في Artifacts
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
