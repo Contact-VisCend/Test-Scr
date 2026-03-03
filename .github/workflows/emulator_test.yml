@@ -2,7 +2,7 @@ name: Android Emulator Test with Video and Screenshot
 on: [push]
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
