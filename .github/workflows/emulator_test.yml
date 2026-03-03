@@ -18,50 +18,58 @@ jobs:
 
       - name: Install Android System Image and Tools
         run: |
-          echo "y" | sdkmanager "system-images;android-30;google_apis;x86" > /dev/null
-          echo "y" | sdkmanager "emulator" > /dev/null
-          echo "y" | sdkmanager "platform-tools" > /dev/null
+          echo "y" | sdkmanager --verbose "system-images;android-30;google_apis;x86" > /dev/null
+          echo "y" | sdkmanager --verbose "emulator" > /dev/null
+          echo "y" | sdkmanager --verbose "platform-tools" > /dev/null
+
       - name: Create AVD and Start Emulator
         run: |
           echo "no" | avdmanager create avd -n test_device -k "system-images;android-30;google_apis;x86" -d pixel_5 --force
-          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -no-snapshot-load &
+          $ANDROID_HOME/emulator/emulator -avd test_device -no-window -camera-back none -camera-front none -memory 2048 -noaudio -no-snapstorage -accel off -gpu swiftshader_indirect -no-boot-anim -no-snapshot-load -no-snapshot-save &
           $ANDROID_HOME/platform-tools/adb wait-for-device
-          sleep 60
-      # - name: Check Boot Status
-      #   run: |
-      #     $ANDROID_HOME/platform-tools/adb shell "while [[ \"\$(getprop sys.boot_completed)\" != \"1\" ]]; do sleep 5; done"
-      # - name: List Available Browsers
-      #   run: |
-      #     $ANDROID_HOME/platform-tools/adb shell pm list packages | grep browser
-      # - name: Open Browser and Take Screenshot
-      #   run: |
-      #     $ANDROID_HOME/platform-tools/adb shell am start -a android.intent.action.VIEW -d http://google.com || \
-      #     $ANDROID_HOME/platform-tools/adb shell monkey -p com.android.chrome -v 500 || \
-      #     $ANDROID_HOME/platform-tools/adb shell monkey -p com.android.browser -v 500
-      #     sleep 10
-      #     $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
-      - name: Record Screen
+          sleep 180  # زيادة وقت الانتظار
+
+      - name: Check Boot Status
         run: |
-          $ANDROID_HOME/platform-tools/adb shell screenrecord /sdcard/emulator_record.mp4 --time-limit 60 &
+          timeout 300 bash -c 'until [[ "$($ANDROID_HOME/platform-tools/adb shell getprop sys.boot_completed 2>/dev/null)" == "1" ]]; do sleep 5; done'
+
+      - name: Start Screen Recording
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell screenrecord /sdcard/emulator_record.mp4 &
           RECORD_PID=$!
           echo "RECORD_PID=$RECORD_PID" >> $GITHUB_ENV
-      - name: Save Installed Apps List
-        run: |
-          $ANDROID_HOME/platform-tools/adb shell pm list packages > packages_list.txt
+
       - name: Perform Swipe and Navigation Actions
         run: |
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 100 1000 200
+          # الانتظار قليلا قبل بدء التمرير
+          sleep 10
+
+          # التمرير من الأعلى إلى الأسفل
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
           sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 100 1000 500 1000 200
+
+          # التمرير من الأسفل إلى الأعلى
+          $ANDROID_HOME/platform-tools/adb shell input swipe 500 1000 500 100 500
           sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input keyevent 3
+
+          # الضغط على زر الرجوع
+          $ANDROID_HOME/platform-tools/adb shell input keyevent 4
           sleep 2
-          $ANDROID_HOME/platform-tools/adb shell input swipe 500 0 500 1000 500
+
+          # التمرير الأفقي
+          $ANDROID_HOME/platform-tools/adb shell input swipe 1000 500 100 500 500
+          sleep 2
+
+      - name: Take Screenshot
+        run: |
+          $ANDROID_HOME/platform-tools/adb shell screencap -p /sdcard/screenshot.png
+
       - name: Stop Screen Recording
         run: |
           $ANDROID_HOME/platform-tools/adb shell kill $RECORD_PID || true
-          $ANDROID_HOME/platform-tools/adb pull /sdcard/emulator_record.mp4 .
-          $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png .
+          $ANDROID_HOME/platform-tools/adb pull /sdcard/emulator_record.mp4 . || echo "Failed to pull emulator_record.mp4"
+          $ANDROID_HOME/platform-tools/adb pull /sdcard/screenshot.png . || echo "Failed to pull screenshot.png"
+
       - name: Stop Emulator
         run: $ANDROID_HOME/platform-tools/adb emu kill
 
@@ -72,4 +80,3 @@ jobs:
           path: |
             emulator_record.mp4
             screenshot.png
-            packages_list.txt
