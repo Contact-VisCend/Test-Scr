@@ -8,7 +8,7 @@ on:
 
 jobs:
   emulator-screenshot:
-    runs-on: windows-2025-vs2026
+    runs-on: windows-2025
 
     steps:
       - name: Checkout
