@@ -8,7 +8,7 @@ on:
 
 jobs:
   emulator-screenshot:
-    runs-on: ubuntu-24.04
+    runs-on: windows-11-arm
 
     steps:
       - name: Checkout
@@ -33,7 +33,7 @@ jobs:
           cores: 4
           avd-name: test
           force-avd-creation: true
-          emulator-boot-timeout: 1200   # زيادة المهلة إلى 20 دقيقة
+          emulator-boot-timeout: 120   # زيادة المهلة إلى 20 دقيقة
           disable-animations: true
           emulator-options: "-no-window -gpu swiftshader_indirect"
           script: |
