@@ -1,4 +1,4 @@
-name: Android Emulator CI with Chrome Accept
+name: Android Emulator CI with Chrome Accept Precise
 
 on:
   push:
@@ -52,11 +52,11 @@ jobs:
             # افتح كروم
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
             sleep 10
-            # اضغط زر "Accept & continue" (إحداثيات تقريبية أسفل الشاشة)
-            adb shell input tap 500 1600
+            # اضغط زر "Accept & continue" بدقة (منتصف العرض، أسفل الشاشة)
+            adb shell input tap 540 1750
             sleep 5
             # ضغطة احترازية في منتصف الشاشة لرسالة تأكيد محتملة
-            adb shell input tap 500 900
+            adb shell input tap 540 960
             sleep 5
             # افتح الموقع المطلوب
             adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
