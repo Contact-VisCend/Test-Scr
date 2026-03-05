@@ -1,4 +1,4 @@
-name: Android Emulator CI with Video and Scroll
+name: Android Emulator CI with Video
 
 on:
   push:
@@ -47,28 +47,26 @@ jobs:
             adb wait-for-device
             adb shell input keyevent 82
             sleep 10
+            # سجل فيديو
             adb shell screenrecord /sdcard/demo.mp4 &
+            # التقط صورة أولى
             adb exec-out screencap -p > screenshot1.png
+            # افتح كروم على العنوان المطلوب
             adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
             sleep 20
+            # التقط صورة بعد فتح الموقع
             adb exec-out screencap -p > screenshot2.png
-            # مرر لأسفل الصفحة عدة مرات بدون loop
+            # مرر لأسفل الصفحة
             adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            # التقط صورة بعد الوصول لأسفل الصفحة
-            adb exec-out screencap -p > screenshot_bottom.png
+            sleep 5
+            # التقط صورة بعد التمرير
+            adb exec-out screencap -p > screenshot3.png
+            # استخرج قائمة التطبيقات المثبتة
             adb shell pm list packages > apps.txt
+            # أوقف تسجيل الفيديو
             adb shell pkill -l2 screenrecord
+            # انسخ الفيديو من المحاكي
             adb pull /sdcard/demo.mp4 demo.mp4
-
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -78,5 +76,5 @@ jobs:
             demo.mp4
             screenshot1.png
             screenshot2.png
-            screenshot_bottom.png
+            screenshot3.png
             apps.txt
