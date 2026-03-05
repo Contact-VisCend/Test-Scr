@@ -95,9 +95,17 @@ jobs:
 
       - name: Convert video to webm
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          if ! command -v ffmpeg &> /dev/null
+          then
+            echo "ffmpeg not found, installing..."
+            sudo apt-get update -y
+            sudo apt-get install -y ffmpeg
+          else
+            echo "ffmpeg already installed"
+          fi
           ffmpeg -i demo.mp4 -c:v libvpx-vp9 -b:v 1M demo.webm
+
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
