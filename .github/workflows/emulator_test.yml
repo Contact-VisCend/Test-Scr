@@ -85,7 +85,6 @@ jobs:
             adb shell pkill -l2 screenrecord
             # انسخ الفيديو من المحاكي
             adb pull /sdcard/demo.mp4 demo.mp4
-        shell: bash
 
       - name: Convert video to webm
         run: |
