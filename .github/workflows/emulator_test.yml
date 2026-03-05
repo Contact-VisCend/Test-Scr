@@ -48,11 +48,11 @@ jobs:
             adb shell input keyevent 82
             sleep 10
             # سجل فيديو
-            adb shell screenrecord /sdcard/demo.mp4 &
+            adb shell screenrecord --output-format=webm /sdcard/demo.webm &
             # افتح كروم
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
             sleep 10
-            # اضغط زر "Accept & continue" بدقة (منتصف العرض، أسفل الشاشة)
+            # اضغط زر "Accept & continue" بدقة
             adb shell input tap 543 2121
             sleep 5
             # ضغطة احترازية في منتصف الشاشة لرسالة تأكيد محتملة
@@ -81,14 +81,14 @@ jobs:
             # أوقف تسجيل الفيديو
             adb shell pkill -l2 screenrecord
             # انسخ الفيديو من المحاكي
-            adb pull /sdcard/demo.mp4 demo.mp4
+            adb pull /sdcard/demo.webm demo.webm
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: emulator-artifacts
           path: |
-            demo.mp4
+            demo.webm
             screenshot2.png
             screenshot_bottom.png
             apps.txt
