@@ -1,4 +1,4 @@
-name: Android Emulator CI with Video
+name: Android Emulator CI with Chrome Accept
 
 on:
   push:
@@ -49,28 +49,33 @@ jobs:
             sleep 10
             # سجل فيديو
             adb shell screenrecord /sdcard/demo.mp4 &
-            # التقط صورة أولى
-            adb exec-out screencap -p > screenshot1.png
-            # افتح كروم على العنوان المطلوب
+            # افتح كروم
+            adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
+            sleep 10
+            # اضغط زر "Accept & continue" (إحداثيات تقريبية أسفل الشاشة)
+            adb shell input tap 500 1600
+            sleep 5
+            # ضغطة احترازية في منتصف الشاشة لرسالة تأكيد محتملة
+            adb shell input tap 500 900
+            sleep 5
+            # افتح الموقع المطلوب
             adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
             sleep 20
             # التقط صورة بعد فتح الموقع
             adb exec-out screencap -p > screenshot2.png
-            # مرر لأسفل الصفحة
+            # مرر لأسفل الصفحة عدة مرات بدون loop
             adb shell input swipe 500 1500 500 200
-            sleep 5
-            # التقط صورة بعد التمرير
-            adb exec-out screencap -p > screenshot3.png
-            # مرر لأسفل الصفحة
+            sleep 3
             adb shell input swipe 500 1500 500 200
-            sleep 5
-            # التقط صورة بعد التمرير
-            adb exec-out screencap -p > screenshot3.png
-            # مرر لأسفل الصفحة
+            sleep 3
             adb shell input swipe 500 1500 500 200
-            sleep 5
-            # التقط صورة بعد التمرير
-            adb exec-out screencap -p > screenshot3.png
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            # التقط صورة بعد الوصول لأسفل الصفحة
+            adb exec-out screencap -p > screenshot_bottom.png
             # استخرج قائمة التطبيقات المثبتة
             adb shell pm list packages > apps.txt
             # أوقف تسجيل الفيديو
@@ -84,7 +89,6 @@ jobs:
           name: emulator-artifacts
           path: |
             demo.mp4
-            screenshot1.png
             screenshot2.png
-            screenshot3.png
+            screenshot_bottom.png
             apps.txt
