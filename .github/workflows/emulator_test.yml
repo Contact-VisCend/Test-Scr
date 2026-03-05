@@ -54,12 +54,15 @@ jobs:
             sleep 10
             # اضغط زر "Accept & continue"
             adb shell input tap 543 2121
+            adb exec-out screencap -p > screenshot_accept.png
             sleep 5
             # ضغطة احترازية
             adb shell input tap 330 1446
+            adb exec-out screencap -p > screenshot_confirm.png
             sleep 5
             # ضغطة إضافية عند الموقع الجديد
             adb shell input tap 132 2139
+            adb exec-out screencap -p > screenshot_extra.png
             sleep 5
             # افتح الموقع المطلوب
             adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
@@ -99,6 +102,9 @@ jobs:
           path: |
             demo.mp4
             demo.webm
+            screenshot_accept.png
+            screenshot_confirm.png
+            screenshot_extra.png
             screenshot2.png
             screenshot_bottom.png
             apps.txt
