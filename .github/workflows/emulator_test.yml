@@ -44,34 +44,31 @@ jobs:
           disable-animations: true
           emulator-options: "-no-window -gpu swiftshader_indirect"
           script: |
-            # تأكد أن السكربت يستخدم bash
-            set -e
             adb wait-for-device
             adb shell input keyevent 82
             sleep 10
-            # سجل فيديو
             adb shell screenrecord /sdcard/demo.mp4 &
-            # التقط صورة أولى
             adb exec-out screencap -p > screenshot1.png
-            # افتح كروم على العنوان المطلوب
             adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
             sleep 20
-            # التقط صورة بعد فتح الموقع
             adb exec-out screencap -p > screenshot2.png
-            # مرر لأسفل الصفحة عدة مرات للوصول إلى أقصى أسفل
-            for i in $(seq 1 5); do
-              adb shell input swipe 500 1500 500 200
-              sleep 3
-            done
+            # مرر لأسفل الصفحة عدة مرات بدون loop
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb shell input swipe 500 1500 500 200
+            sleep 3
             # التقط صورة بعد الوصول لأسفل الصفحة
             adb exec-out screencap -p > screenshot_bottom.png
-            # استخرج قائمة التطبيقات المثبتة
             adb shell pm list packages > apps.txt
-            # أوقف تسجيل الفيديو
             adb shell pkill -l2 screenrecord
-            # انسخ الفيديو من المحاكي
             adb pull /sdcard/demo.mp4 demo.mp4
-        shell: bash
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
