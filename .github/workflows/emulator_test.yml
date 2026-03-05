@@ -66,7 +66,7 @@ jobs:
             adb exec-out screencap -p > screenshot_extra.png
             sleep 5
             # افتح الموقع المطلوب
-            adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
+            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
             sleep 20
             # التقط صورة بعد فتح الموقع
             adb exec-out screencap -p > screenshot2.png
