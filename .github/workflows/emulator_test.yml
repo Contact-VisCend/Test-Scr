@@ -30,19 +30,22 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
           ls -al /dev/kvm || true
-
+      - name: Pick random device profile
+        id: pick-device
+        run: |
+          devices=("pixel_2" "pixel_3" "pixel_4" "pixel_5" "pixel_6" "pixel_7" \
+                   "nexus_5x" "nexus_6p" "galaxy_nexus" "galaxy_tab_s7" \
+                   "oneplus_8" "oneplus_9" "xperia_xz3" "huawei_p30" "xiaomi_mi10")
+          random_device=${devices[$RANDOM % ${#devices[@]}]}
+          echo "device=$random_device" >> $GITHUB_OUTPUT
+      
       - name: Launch emulator and run script
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
           target: google_apis
           arch: x86_64
-          profile: pixel_5
-          cores: 4
-          avd-name: test
-          force-avd-creation: true
-          emulator-boot-timeout: 1200
-          disable-animations: true
+          profile: ${{ steps.pick-device.outputs.device }}
           emulator-options: "-no-window -gpu swiftshader_indirect"
           script: |
             adb wait-for-device
@@ -54,8 +57,8 @@ jobs:
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
             sleep 10
             # اضغط زر "Accept & continue"
-            adb exec-out screencap -p > screenshot_accept.png
             adb shell input tap 543 2121
+            adb exec-out screencap -p > screenshot_accept.png
             sleep 5
             # ضغطة احترازية
             adb shell input tap 330 1446
@@ -66,48 +69,34 @@ jobs:
             adb exec-out screencap -p > screenshot_extra.png
             sleep 5
             # افتح الموقع المطلوب
-            adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
+            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
             sleep 20
             # التقط صورة بعد فتح الموقع
-            adb exec-out screencap -p > screenshot_open.png
-            # مرر لأسفل الصفحة 6 مرات مع صور بعد كل تمريرتين
+            adb exec-out screencap -p > screenshot2.png
+            # مرر لأسفل الصفحة عدة مرات
             adb shell input swipe 500 1500 500 200
             sleep 3
             adb shell input swipe 500 1500 500 200
             sleep 3
-            adb exec-out screencap -p > screenshot_scroll2.png
             adb shell input swipe 500 1500 500 200
             sleep 3
             adb shell input swipe 500 1500 500 200
             sleep 3
-            adb exec-out screencap -p > screenshot_scroll4.png
             adb shell input swipe 500 1500 500 200
             sleep 3
-            adb shell input swipe 500 1500 500 200
-            adb shell input swipe 500 1500 500 200
-            sleep 25
-            adb exec-out screencap -p > screenshot_scroll6.png
-            sleep 3
+            # التقط صورة بعد الوصول لأسفل الصفحة
+            adb exec-out screencap -p > screenshot_bottom.png
             # استخرج قائمة التطبيقات المثبتة
             adb shell pm list packages > apps.txt
             # أوقف تسجيل الفيديو
             adb shell pkill -l2 screenrecord
             # انسخ الفيديو من المحاكي
             adb pull /sdcard/demo.mp4 demo.mp4
-
       # - name: Convert video to webm
       #   run: |
-      #     if ! command -v ffmpeg &> /dev/null
-      #     then
-      #       echo "ffmpeg not found, installing..."
-      #       sudo apt-get update -y
-      #       sudo apt-get install -y ffmpeg
-      #     else
-      #       echo "ffmpeg already installed"
-      #     fi
+      #     sudo apt-get update
+      #     sudo apt-get install -y ffmpeg
       #     ffmpeg -i demo.mp4 -c:v libvpx-vp9 -b:v 1M demo.webm
-
-
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -117,10 +106,8 @@ jobs:
             # demo.mp4
             # demo.webm
             screenshot_accept.png
-            screenshot_confirm.png
-            # screenshot_extra.png
-            screenshot_open.png
-            screenshot_scroll2.png
-            screenshot_scroll4.png
-            screenshot_scroll6.png
+            # screenshot_confirm.png
+            screenshot_extra.png
+            screenshot2.png
+            screenshot_bottom.png
             # apps.txt
