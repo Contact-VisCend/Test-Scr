@@ -61,6 +61,16 @@ jobs:
             sleep 5
             # التقط صورة بعد التمرير
             adb exec-out screencap -p > screenshot3.png
+            # مرر لأسفل الصفحة
+            adb shell input swipe 500 1500 500 200
+            sleep 5
+            # التقط صورة بعد التمرير
+            adb exec-out screencap -p > screenshot3.png
+            # مرر لأسفل الصفحة
+            adb shell input swipe 500 1500 500 200
+            sleep 5
+            # التقط صورة بعد التمرير
+            adb exec-out screencap -p > screenshot3.png
             # استخرج قائمة التطبيقات المثبتة
             adb shell pm list packages > apps.txt
             # أوقف تسجيل الفيديو
