@@ -129,7 +129,7 @@ jobs:
         with:
           name: emulator-artifacts
           path: |
-            demo.mp4
+            # demo.mp4
             # demo.webm
             screenshot_accept.png
             # screenshot_confirm.png
