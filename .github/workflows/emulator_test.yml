@@ -58,12 +58,11 @@ jobs:
             adb shell getprop ro.product.brand
             adb shell setprop ro.product.model "Pixel 6"
             adb shell setprop ro.product.device "pixel_6"
-
+           
             sleep 5
            
-            # بدء تسجيل الفيديو في الخلفية
-            adb shell screenrecord /sdcard/demo.mp4 &
-            RECORD_PID=$!
+            # بدء تسجيل الفيديو لمدة 120 ثانية (يغلق تلقائيًا)
+            adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
            
             # فتح كروم
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
@@ -136,12 +135,9 @@ jobs:
             # قائمة التطبيقات
             adb shell pm list packages > apps.txt
            
-            # إيقاف التسجيل بشكل صحيح
-            adb shell kill -INT $RECORD_PID
-            sleep 2
-           
-            # سحب الفيديو من الجهاز
+            # سحب الفيديو بعد انتهاء التسجيل
             adb pull /sdcard/demo.mp4 demo.mp4
+
 
 
       # - name: Convert video to webm
