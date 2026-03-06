@@ -82,7 +82,7 @@ jobs:
             sleep 5
 
             # فتح الموقع
-            adb shell am start -a android.intent.action.VIEW -d "https://rescend.netlify.app/" com.android.chrome
+            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
             sleep 20
             adb exec-out screencap -p > screenshot_open.png
 
@@ -129,13 +129,13 @@ jobs:
         with:
           name: emulator-artifacts
           path: |
-            # demo.mp4
+            demo.mp4
             # demo.webm
             screenshot_accept.png
-            screenshot_confirm.png
-            screenshot_extra.png
+            # screenshot_confirm.png
+            # screenshot_extra.png
             screenshot_open.png
             screenshot_scroll2.png
-            screenshot_scroll4.png
+            # screenshot_scroll4.png
             screenshot_scroll6.png
             # apps.txt
