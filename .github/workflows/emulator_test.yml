@@ -87,6 +87,11 @@ jobs:
 
             # نقرة إضافية
             adb shell input tap 132 1725
+            adb shell input tap 132 1825
+            adb shell input tap 132 1925
+            adb shell input tap 132 2025
+            adb shell input tap 132 2125
+            adb shell input tap 132 2225
             sleep 5
             adb exec-out screencap -p > screenshot_extra.png
 
