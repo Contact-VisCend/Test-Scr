@@ -68,9 +68,15 @@ jobs:
 
             # قبول الشروط
             adb shell input tap 543 1704
+            adb shell input tap 543 1754
+            adb shell input tap 543 1654
             adb shell input tap 543 1840
             adb shell input tap 543 2121
+            adb shell input tap 543 2150
+            adb shell input tap 543 2250
+            adb shell input tap 543 2350
             adb shell input tap 543 1900
+            adb shell input tap 543 1950
             sleep 5
             adb exec-out screencap -p > screenshot_accept.png
 
