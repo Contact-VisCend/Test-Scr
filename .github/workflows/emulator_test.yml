@@ -67,19 +67,19 @@ jobs:
             sleep 10
 
             # قبول الشروط
-            adb shell input tap 543 2121
+            adb shell input tap 543 1704
             sleep 5
             adb exec-out screencap -p > screenshot_accept.png
 
             # نقرة احترازية
             adb shell input tap 330 1446
-            adb exec-out screencap -p > screenshot_confirm.png
             sleep 5
+            adb exec-out screencap -p > screenshot_confirm.png
 
             # نقرة إضافية
-            adb shell input tap 132 2139
-            adb exec-out screencap -p > screenshot_extra.png
+            adb shell input tap 132 1725
             sleep 5
+            adb exec-out screencap -p > screenshot_extra.png
 
             # فتح الموقع
             adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
@@ -93,13 +93,13 @@ jobs:
             adb exec-out screencap -p > screenshot_scroll2.png
             sleep 3
 
-            adb shell input tap 543 2121
+            adb shell input tap 543 1600
             adb shell input swipe 500 1500 500 200
             sleep 3
-            adb shell input tap 543 2121
+            adb shell input tap 543 1600
             adb shell input swipe 500 1500 500 200
             sleep 3
-            adb shell input tap 543 2121
+            adb shell input tap 543 1600
             adb exec-out screencap -p > screenshot_scroll4.png
 
             adb shell input swipe 500 1500 500 200
