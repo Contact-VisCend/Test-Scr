@@ -57,15 +57,15 @@ jobs:
             adb shell getprop ro.product.device
             adb shell getprop ro.product.brand
             sleep 5
-
-            # تسجيل فيديو mp4
+           
+            # بدء تسجيل الفيديو في الخلفية
             adb shell screenrecord /sdcard/demo.mp4 &
-            sleep 3
-
+            RECORD_PID=$!
+           
             # فتح كروم
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
             sleep 10
-
+           
             # قبول الشروط
             adb shell input tap 543 1704
             adb shell input tap 543 1754
@@ -79,12 +79,12 @@ jobs:
             adb shell input tap 543 1950
             sleep 5
             adb exec-out screencap -p > screenshot_accept.png
-
+           
             # نقرة احترازية
             adb shell input tap 330 1446
             sleep 5
             adb exec-out screencap -p > screenshot_confirm.png
-
+           
             # نقرة إضافية
             adb shell input tap 132 1625
             adb shell input tap 132 1665
@@ -102,19 +102,19 @@ jobs:
             adb shell input tap 132 2225
             sleep 5
             adb exec-out screencap -p > screenshot_extra.png
-
+           
             # فتح الموقع
             adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
             sleep 20
             adb exec-out screencap -p > screenshot_open.png
-
+           
             # تمرير 6 مرات مع صور بعد كل تمريرتين
             adb shell input swipe 500 1500 500 200
             sleep 3
             adb shell input swipe 500 1500 500 200
             adb exec-out screencap -p > screenshot_scroll2.png
             sleep 3
-
+           
             adb shell input tap 543 1600
             adb shell input swipe 500 1500 500 200
             sleep 3
@@ -123,19 +123,23 @@ jobs:
             sleep 3
             adb shell input tap 543 1600
             adb exec-out screencap -p > screenshot_scroll4.png
-
+           
             adb shell input swipe 500 1500 500 200
             sleep 3
             adb shell input swipe 500 1500 500 200
             adb exec-out screencap -p > screenshot_scroll6.png
             sleep 3
-
+           
             # قائمة التطبيقات
             adb shell pm list packages > apps.txt
-
-            # إيقاف الفيديو
-            adb shell pkill -l2 screenrecord
+           
+            # إيقاف التسجيل بشكل صحيح
+            adb shell kill -INT $RECORD_PID
+            sleep 2
+           
+            # سحب الفيديو من الجهاز
             adb pull /sdcard/demo.mp4 demo.mp4
+
 
       # - name: Convert video to webm
       #   run: |
@@ -151,7 +155,7 @@ jobs:
         with:
           name: emulator-artifacts
           path: |
-            # demo.mp4
+            demo.mp4
             # demo.webm
             screenshot_accept.png
             # screenshot_confirm.png
