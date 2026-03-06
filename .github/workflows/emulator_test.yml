@@ -57,7 +57,7 @@ jobs:
             adb shell getprop ro.product.device
             adb shell getprop ro.product.brand
             adb shell setprop ro.product.model "Pixel 6"
-            adb shell setprop ro.product.device "pixel_6"
+            # adb shell setprop ro.product.device "pixel_6"
            
             sleep 5
            
