@@ -86,9 +86,16 @@ jobs:
             adb exec-out screencap -p > screenshot_confirm.png
 
             # نقرة إضافية
+            adb shell input tap 132 1625
+            adb shell input tap 132 1665
+            adb shell input tap 132 1695
             adb shell input tap 132 1725
+            adb shell input tap 132 1765
             adb shell input tap 132 1825
+            adb shell input tap 132 1855
+            adb shell input tap 132 1895
             adb shell input tap 132 1925
+            adb shell input tap 132 1995
             adb shell input tap 132 2025
             adb shell input tap 132 2125
             adb shell input tap 132 2225
