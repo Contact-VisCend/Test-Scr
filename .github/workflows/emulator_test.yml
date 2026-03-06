@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
   workflow_dispatch: 
 
-jobs: 
+jobs:  
   emulator-video:
     runs-on: ubuntu-latest
 
