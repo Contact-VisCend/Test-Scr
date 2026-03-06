@@ -74,15 +74,17 @@ jobs:
             sleep 3
             adb shell input swipe 500 1500 500 200
             sleep 3
-            # adb exec-out screencap -p > screenshot_scroll2.png
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            sleep 3
+            adb exec-out screencap -p > screenshot_scroll2.png
+            adb shell input tap 543 2121
+            adb shell input tap 132 2139
+            # adb shell input swipe 500 1500 500 200
+            # sleep 3
+            # adb shell input swipe 500 1500 500 200
+            # sleep 3
+            # adb shell input swipe 500 1500 500 200
+            # sleep 3
+            # adb shell input swipe 500 1500 500 200
+            sleep 6
             adb exec-out screencap -p > screenshot_scroll4.png
             adb shell input swipe 500 1500 500 200
             sleep 15
