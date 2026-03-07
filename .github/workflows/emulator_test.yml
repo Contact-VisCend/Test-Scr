@@ -121,6 +121,8 @@ jobs:
             adb shell am start -a android.intent.action.VIEW -d "https://www.effectivegatecpm.com/hvaux3ibr?key=06567318b4c1f8b6e102908f6def499a" com.android.chrome
             sleep 5
 
+            adb shell input tap 145 1695
+            adb shell input tap 155 1710
 
             sleep 15
             adb exec-out screencap -p > screenshot_open.png
