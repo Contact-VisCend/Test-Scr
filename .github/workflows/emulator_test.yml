@@ -70,10 +70,12 @@ jobs:
             adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
             # adb shell monkey -p com.google.android.webview -c android.intent.category.LAUNCHER 1
+            adb shell monkey -p com.android.htmlviewer 1
+
 
             sleep 10
            
-            # adb exec-out screencap -p > screenshot_accept.png
+            adb exec-out screencap -p > screenshot_accept.png
             # قبول الشروط
             adb shell input tap 543 1704
             adb shell input tap 543 1754
