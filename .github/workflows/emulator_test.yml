@@ -2,7 +2,7 @@ name: Android Emulator CI with Random Device Profile
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] 
   pull_request:
     branches: [ "main" ] 
   workflow_dispatch: 
