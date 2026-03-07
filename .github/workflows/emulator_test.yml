@@ -98,10 +98,10 @@ jobs:
            
             # نقرة إضافية
             # adb shell input tap 132 1625
-            # adb shell input tap 132 1665
+            adb shell input tap 132 1665
             adb shell input tap 145 1695
-            # adb shell input tap 132 1725
-            # adb shell input tap 132 1765
+            adb shell input tap 155 1720
+            adb shell input tap 132 1700
             # adb shell input tap 132 1825
             # adb shell input tap 132 1855
             # adb shell input tap 132 1895
@@ -176,7 +176,7 @@ jobs:
             screenshot_accept.png
             screenshot_autube.png
             screenshot_confirm.png
-            # screenshot_extra.png
+            screenshot_extra.png
             screenshot_open.png
             screenshot_scroll2.png
             # screenshot_scroll4.png
