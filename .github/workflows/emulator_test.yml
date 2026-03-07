@@ -70,7 +70,8 @@ jobs:
             adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
             # adb shell monkey -p com.google.android.webview -c android.intent.category.LAUNCHER 1
-            adb shell monkey -p com.android.htmlviewer 1
+            adb shell monkey -p com.android.htmlviewer -c android.intent.category.LAUNCHER 1
+
 
 
             sleep 10
