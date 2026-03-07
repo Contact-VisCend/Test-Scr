@@ -1,5 +1,5 @@
 name: Android Emulator CI with Random Device Profile
-
+ 
 on:
   push:
     branches: [ "main" ] 
