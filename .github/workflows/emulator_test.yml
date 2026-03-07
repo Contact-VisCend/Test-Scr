@@ -65,7 +65,7 @@ jobs:
             # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
            
             
-            adb shell am start -n com.google.android.webview/com.google.android.webview.WebViewActivity
+            adb shell am start -n com.google.android.youtube/com.google.android.youtube.HomeActivity
             sleep 5
             adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
