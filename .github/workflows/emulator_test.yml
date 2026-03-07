@@ -118,6 +118,8 @@ jobs:
             # فتح الموقع
             # فتح كروم بوضع سطح المكتب + User-Agent مخصص
             adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://viscend.vercel.app/"
+            sleep 5
+            adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://viscend.vercel.app/"
 
 
             sleep 20
@@ -177,4 +179,4 @@ jobs:
             screenshot_scroll2.png
             # screenshot_scroll4.png
             screenshot_scroll6.png
-            apps.txt
+            # apps.txt
