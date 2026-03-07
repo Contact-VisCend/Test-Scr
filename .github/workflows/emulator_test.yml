@@ -112,7 +112,7 @@ jobs:
             adb shell am start \
             -a android.intent.action.VIEW \
             -d "https://viscend.vercel.app/" \
-            --es android.intent.extra.HEADER "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+            com.android.chrome
 
 
             sleep 20
