@@ -88,27 +88,34 @@ jobs:
             adb exec-out screencap -p > screenshot_confirm.png
            
             # نقرة إضافية
-            adb shell input tap 132 1625
-            adb shell input tap 132 1665
-            adb shell input tap 140 1695
-            adb shell input tap 132 1725
-            adb shell input tap 132 1765
-            adb shell input tap 132 1825
-            adb shell input tap 132 1855
-            adb shell input tap 132 1895
-            adb shell input tap 132 1925
-            adb shell input tap 132 1995
-            adb shell input tap 132 2025
-            adb shell input tap 132 2055
-            adb shell input tap 132 2188
-            adb shell input tap 132 2150
-            adb shell input tap 132 2125
-            adb shell input tap 132 2225
+            # adb shell input tap 132 1625
+            # adb shell input tap 132 1665
+            adb shell input tap 145 1695
+            # adb shell input tap 132 1725
+            # adb shell input tap 132 1765
+            # adb shell input tap 132 1825
+            # adb shell input tap 132 1855
+            # adb shell input tap 132 1895
+            # adb shell input tap 132 1925
+            # adb shell input tap 132 1995
+            # adb shell input tap 132 2025
+            # adb shell input tap 132 2055
+            # adb shell input tap 132 2188
+            # adb shell input tap 132 2150
+            # adb shell input tap 132 2125
+            # adb shell input tap 132 2225
             sleep 5
             adb exec-out screencap -p > screenshot_extra.png
            
             # فتح الموقع
-            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
+            # فتح كروم بوضع سطح المكتب + User-Agent مخصص
+            adb shell am start \
+              -a android.intent.action.VIEW \
+              -d "https://viscend.vercel.app/" \
+              com.android.chrome \
+              --es user-agent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
+              --es chrome-command-line "force-desktop-mode"
+
             sleep 20
             adb exec-out screencap -p > screenshot_open.png
            
