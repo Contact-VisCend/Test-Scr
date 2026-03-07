@@ -64,10 +64,15 @@ jobs:
             # بدء تسجيل الفيديو لمدة 120 ثانية (يغلق تلقائيًا)
             # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
            
+            
+            adb shell am start -n com.google.android.webview/com.google.android.webview.WebViewActivity
+            sleep 5
+            adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
-            adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
+            adb shell am start -n com.google.android.webview/com.google.android.webview.WebViewActivity
             sleep 10
            
+            adb exec-out screencap -p > screenshot_accept.png
             # قبول الشروط
             adb shell input tap 543 1704
             adb shell input tap 543 1754
@@ -80,7 +85,6 @@ jobs:
             # adb shell input tap 543 1900
             # adb shell input tap 543 1950
             sleep 5
-            adb exec-out screencap -p > screenshot_accept.png
            
             # نقرة احترازية
             adb shell input tap 330 1446
@@ -109,11 +113,8 @@ jobs:
            
             # فتح الموقع
             # فتح كروم بوضع سطح المكتب + User-Agent مخصص
-            adb shell am start \
-            -a android.intent.action.VIEW \
-            -d "https://viscend.vercel.app/" \
-            com.android.chrome
-
+            adb shell am start -n com.google.android.webview/com.google.android.webview.WebViewActivity \
+            -d "https://viscend.vercel.app/" 
 
             sleep 20
             adb exec-out screencap -p > screenshot_open.png
@@ -165,7 +166,8 @@ jobs:
             # demo.mp4
             # demo.webm
             screenshot_accept.png
-            # screenshot_confirm.png
+            screenshot_autube.png
+            screenshot_confirm.png
             # screenshot_extra.png
             screenshot_open.png
             screenshot_scroll2.png
