@@ -90,7 +90,7 @@ jobs:
             # نقرة إضافية
             adb shell input tap 132 1625
             adb shell input tap 132 1665
-            adb shell input tap 132 1695
+            adb shell input tap 140 1695
             adb shell input tap 132 1725
             adb shell input tap 132 1765
             adb shell input tap 132 1825
