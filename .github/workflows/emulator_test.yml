@@ -122,10 +122,10 @@ jobs:
             sleep 5
 
 
-            sleep 20
+            sleep 15
             adb exec-out screencap -p > screenshot_open.png
            
-            adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://rescend.netlify.app/"
+            # adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://rescend.netlify.app/"
             sleep 5
             # تمرير 6 مرات مع صور بعد كل تمريرتين
             adb shell input swipe 500 1500 500 200
