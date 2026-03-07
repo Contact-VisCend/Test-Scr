@@ -99,7 +99,9 @@ jobs:
             adb shell input tap 132 1925
             adb shell input tap 132 1995
             adb shell input tap 132 2025
-            adb shell input tap 132 2050
+            adb shell input tap 132 2055
+            adb shell input tap 132 2188
+            adb shell input tap 132 2150
             adb shell input tap 132 2125
             adb shell input tap 132 2225
             sleep 5
