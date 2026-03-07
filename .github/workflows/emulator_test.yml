@@ -53,13 +53,13 @@ jobs:
           emulator-options: "-no-window -gpu swiftshader_indirect"
           script: |
             adb wait-for-device
-            adb shell getprop ro.product.model
-            adb shell getprop ro.product.device
-            adb shell getprop ro.product.brand
+            # adb shell getprop ro.product.model
+            # adb shell getprop ro.product.device
+            # adb shell getprop ro.product.brand
             # adb shell setprop ro.product.model "Pixel 6"
             # adb shell setprop ro.product.device "pixel_6"
            
-            sleep 5
+            # sleep 5
            
             # بدء تسجيل الفيديو لمدة 120 ثانية (يغلق تلقائيًا)
             # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
