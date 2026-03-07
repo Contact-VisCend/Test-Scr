@@ -62,7 +62,7 @@ jobs:
             sleep 5
            
             # بدء تسجيل الفيديو لمدة 120 ثانية (يغلق تلقائيًا)
-            adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
+            # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
            
             # فتح كروم
             adb shell am start -n com.android.chrome/com.google.android.apps.chrome.Main
@@ -145,7 +145,7 @@ jobs:
             adb shell pm list packages > apps.txt
            
             # سحب الفيديو بعد انتهاء التسجيل
-            adb pull /sdcard/demo.mp4 demo.mp4
+            # adb pull /sdcard/demo.mp4 demo.mp4
 
 
 
