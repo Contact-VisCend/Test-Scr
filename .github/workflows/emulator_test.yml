@@ -65,12 +65,13 @@ jobs:
             # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
            
             
-            adb shell am start -n com.google.android.youtube/com.google.android.youtube.HomeActivity
-            sleep 5
-            adb exec-out screencap -p > screenshot_utube.png
+            # adb shell am start -n com.google.android.youtube/com.google.android.youtube.HomeActivity
+            # sleep 5
+            # adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
             # adb shell monkey -p com.google.android.webview -c android.intent.category.LAUNCHER 1
             # adb shell monkey -p com.android.htmlviewer -c android.intent.category.LAUNCHER 1
+            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
 
 
 
@@ -117,7 +118,7 @@ jobs:
            
             # فتح الموقع
             # فتح كروم بوضع سطح المكتب + User-Agent مخصص
-            adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://viscend.vercel.app/"
+            adb shell am start -a android.intent.action.VIEW -d "https://www.effectivegatecpm.com/hvaux3ibr?key=06567318b4c1f8b6e102908f6def499a" com.android.chrome
             sleep 5
 
 
