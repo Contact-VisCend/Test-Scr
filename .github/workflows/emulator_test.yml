@@ -119,12 +119,13 @@ jobs:
             # فتح كروم بوضع سطح المكتب + User-Agent مخصص
             adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://viscend.vercel.app/"
             sleep 5
-            adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://viscend.vercel.app/"
 
 
             sleep 20
             adb exec-out screencap -p > screenshot_open.png
            
+            adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://rescend.netlify.app/"
+            sleep 5
             # تمرير 6 مرات مع صور بعد كل تمريرتين
             adb shell input swipe 500 1500 500 200
             sleep 3
