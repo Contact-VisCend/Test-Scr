@@ -70,7 +70,7 @@ jobs:
             adb exec-out screencap -p > screenshot_utube.png
             # فتح كروم
             # adb shell monkey -p com.google.android.webview -c android.intent.category.LAUNCHER 1
-            adb shell monkey -p com.android.htmlviewer -c android.intent.category.LAUNCHER 1
+            # adb shell monkey -p com.android.htmlviewer -c android.intent.category.LAUNCHER 1
 
 
 
@@ -118,7 +118,7 @@ jobs:
             # فتح الموقع
             # فتح كروم بوضع سطح المكتب + User-Agent مخصص
             adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity \
-            -d "https://viscend.vercel.app/"
+              -d "https://viscend.vercel.app/"
 
 
             sleep 20
