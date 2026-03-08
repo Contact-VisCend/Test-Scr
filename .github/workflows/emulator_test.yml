@@ -45,7 +45,7 @@ jobs:
           api-level: 30
           target: google_apis
           arch: x86_64
-          profile: "pixel"
+          profile: pixel
           avd-name: test
           force-avd-creation: true
           emulator-boot-timeout: 1200
@@ -53,134 +53,52 @@ jobs:
           emulator-options: "-no-window -gpu swiftshader_indirect"
           script: |
             adb wait-for-device
-            # adb shell getprop ro.product.model
-            # adb shell getprop ro.product.device
-            # adb shell getprop ro.product.brand
-            # adb shell setprop ro.product.model "Pixel 6"
-            # adb shell setprop ro.product.device "pixel_6"
-           
-            # sleep 5
-           
-            # بدء تسجيل الفيديو لمدة 120 ثانية (يغلق تلقائيًا)
-            # adb shell screenrecord --time-limit 120 /sdcard/demo.mp4 &
-           
-            
-            # adb shell am start -n com.google.android.youtube/com.google.android.youtube.HomeActivity
-            # sleep 5
-            # adb exec-out screencap -p > screenshot_utube.png
-            # فتح كروم
-            # adb shell monkey -p com.google.android.webview -c android.intent.category.LAUNCHER 1
-            # adb shell monkey -p com.android.htmlviewer -c android.intent.category.LAUNCHER 1
-            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" com.android.chrome
 
+            # تنزيل فايرفوكس APK من موقع رسمي (Mozilla direct link أو APKMirror)
+            wget -O firefox.apk "https://download.mozilla.org/?product=fennec-latest&os=android&lang=en-US"
 
+            # تثبيت فايرفوكس
+            adb install firefox.apk
 
+            # لقطة شاشة بعد التثبيت
+            adb exec-out screencap -p > screenshot_install.png
             sleep 10
-           
-            adb exec-out screencap -p > screenshot_accept.png
-            # قبول الشروط
-            adb shell input tap 543 1704
-            adb shell input tap 543 1754
-            adb shell input tap 543 1654
-            adb shell input tap 543 1840
-            # adb shell input tap 543 2121
-            # adb shell input tap 543 2150
-            # adb shell input tap 543 2250
-            # adb shell input tap 543 2350
-            # adb shell input tap 543 1900
-            # adb shell input tap 543 1950
-            sleep 5
-           
-            # نقرة احترازية
-            adb shell input tap 330 1446
-            sleep 5
-            adb exec-out screencap -p > screenshot_confirm.png
-           
-            # نقرة إضافية
-            # adb shell input tap 132 1625
-            adb shell input tap 132 1665
-            adb shell input tap 145 1695
-            adb shell input tap 155 1720
-            adb shell input tap 132 1700
-            # adb shell input tap 132 1825
-            # adb shell input tap 132 1855
-            # adb shell input tap 132 1895
-            # adb shell input tap 132 1925
-            # adb shell input tap 132 1995
-            # adb shell input tap 132 2025
-            # adb shell input tap 132 2055
-            # adb shell input tap 132 2188
-            # adb shell input tap 132 2150
-            # adb shell input tap 132 2125
-            # adb shell input tap 132 2225
-            sleep 5
-            adb exec-out screencap -p > screenshot_extra.png
-           
-            # فتح الموقع
-            # فتح كروم بوضع سطح المكتب + User-Agent مخصص
-            adb shell am start -a android.intent.action.VIEW -d "https://www.effectivegatecpm.com/hvaux3ibr?key=06567318b4c1f8b6e102908f6def499a" com.android.chrome
-            sleep 5
+            adb exec-out screencap -p > screenshot_installed.png
 
-            adb shell input tap 145 1695
-            adb shell input tap 155 1710
+            # تشغيل فايرفوكس على الموقع المطلوب بوضع المكتب + UA مخصص
+            adb shell am start \
+              -a android.intent.action.VIEW \
+              -d "https://viscend.vercel.app/" \
+              -n org.mozilla.firefox/org.mozilla.gecko.BrowserApp \
+              --ez desktop_mode true \
+              --es useragent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
+            # انتظار تحميل الصفحة
             sleep 15
+
+            # لقطة شاشة بعد الفتح
             adb exec-out screencap -p > screenshot_open.png
-           
-            # adb shell am start -n com.android.htmlviewer/com.android.htmlviewer.HTMLViewerActivity -d "https://rescend.netlify.app/"
-            sleep 5
-            # تمرير 6 مرات مع صور بعد كل تمريرتين
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            adb exec-out screencap -p > screenshot_scroll2.png
-            sleep 3
-           
-            adb shell input tap 543 1600
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input tap 543 1600
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input tap 543 1600
-            adb exec-out screencap -p > screenshot_scroll4.png
-           
-            adb shell input swipe 500 1500 500 200
-            sleep 3
-            adb shell input swipe 500 1500 500 200
-            adb exec-out screencap -p > screenshot_scroll6.png
-            sleep 3
-           
-            # قائمة التطبيقات
-            adb shell pm list packages > apps.txt
-           
-            # سحب الفيديو بعد انتهاء التسجيل
-            # adb pull /sdcard/demo.mp4 demo.mp4
 
+            # تمرير الصفحة
+            adb shell input swipe 500 1500 500 200
+            sleep 3
+            adb exec-out screencap -p > screenshot_scroll.png
 
+            # حفظ snapshot للمخرجات
+            adb emu avd snapshot save firefox_run
 
-      # - name: Convert video to webm
-      #   run: |
-      #     if ! command -v ffmpeg &> /dev/null
-      #     then
-      #       sudo apt-get update -y
-      #       sudo apt-get install -y ffmpeg
-      #     fi
-      #     ffmpeg -i demo.mp4 -c:v libvpx-vp9 -b:v 1M demo.webm
-
-      - name: Upload artifacts
+      - name: Upload screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: emulator-artifacts
+          name: firefox-screenshots
           path: |
-            # demo.mp4
-            # demo.webm
-            screenshot_accept.png
-            screenshot_autube.png
-            screenshot_confirm.png
-            screenshot_extra.png
+            screenshot_install.png
+            screenshot_installed.png
             screenshot_open.png
-            screenshot_scroll2.png
-            # screenshot_scroll4.png
-            screenshot_scroll6.png
-            # apps.txt
+            screenshot_scroll.png
+
+      - name: Upload emulator snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: firefox-snapshot
+          path: ~/.android/avd/test.avd/snapshots
