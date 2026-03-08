@@ -67,6 +67,8 @@ jobs:
 
             # تشغيل فايرفوكس على الموقع المطلوب بوضع المكتب + UA مخصص
             adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" -n org.mozilla.firefox/org.mozilla.gecko.BrowserApp --ez desktop_mode true 
+            adb shell am start -a android.intent.action.VIEW -d "https://viscend.vercel.app/" -n org.mozilla.firefox/org.mozilla.gecko.BrowserApp
+
 
 
 
@@ -94,6 +96,29 @@ jobs:
 
             # حفظ snapshot للمخرجات
             adb emu avd snapshot save firefox_run
+
+           
+            # قائمة التطبيقات
+            adb shell pm list packages > apps.txt
+           
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: emulator-artifacts
+          path: |
+            # demo.mp4
+            # demo.webm
+            # screenshot_accept.png
+            # screenshot_autube.png
+            # screenshot_confirm.png
+            # screenshot_extra.png
+            # screenshot_open.png
+            # screenshot_scroll2.png
+            # screenshot_scroll4.png
+            # screenshot_scroll6.png
+            apps.txt
+
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
