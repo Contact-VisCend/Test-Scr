@@ -74,7 +74,18 @@ jobs:
               --es useragent "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
 
             # انتظار تحميل الصفحة
-            sleep 15
+            sleep 8
+            
+            # قبول الشروط
+            adb shell input tap 543 1704
+            adb shell input tap 543 1754
+            adb shell input tap 543 1654
+            adb shell input tap 543 1840
+
+            sleep 2
+
+            adb shell input tap 145 1695
+            adb shell input tap 155 1710
 
             # لقطة شاشة بعد الفتح
             adb exec-out screencap -p > screenshot_open.png
