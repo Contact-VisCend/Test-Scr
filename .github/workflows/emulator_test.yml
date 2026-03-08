@@ -66,8 +66,7 @@ jobs:
             adb exec-out screencap -p > screenshot_installed.png
 
             # تشغيل فايرفوكس على الموقع المطلوب بوضع المكتب + UA مخصص
-            adb shell am start \
-              -a android.intent.action.VIEW \
+            adb shell am start -a android.intent.action.VIEW \
               -d "https://viscend.vercel.app/" \
               -n org.mozilla.firefox/org.mozilla.gecko.BrowserApp \
               --ez desktop_mode true \
